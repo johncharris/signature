@@ -74,9 +74,7 @@ class SignatureState extends State<Signature> {
         decoration: BoxDecoration(color: widget.backgroundColor),
         child: Listener(
             onPointerDown: (PointerDownEvent event) {
-              if (!widget.controller.disabled &&
-                  (activePointerId == null ||
-                      activePointerId == event.pointer)) {
+              if (!widget.controller.disabled && (activePointerId == null || activePointerId == event.pointer)) {
                 activePointerId = event.pointer;
                 widget.controller.onDrawStart?.call();
                 _addPoint(event, PointType.tap);
@@ -112,10 +110,7 @@ class SignatureState extends State<Signature> {
                 painter: _SignaturePainter(widget.controller),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                      minWidth: maxWidth,
-                      minHeight: maxHeight,
-                      maxWidth: maxWidth,
-                      maxHeight: maxHeight),
+                      minWidth: maxWidth, minHeight: maxHeight, maxWidth: maxWidth, maxHeight: maxHeight),
                 ),
               ),
             )),
@@ -191,7 +186,7 @@ class SignatureState extends State<Signature> {
   /// METHOD THAT WILL CLEANUP ANY REMNANT POINTER AFTER DISABLING
   /// WIDGET
   void _ensurePointerCleanup() {
-    if(widget.controller.disabled && activePointerId != null){
+    if (widget.controller.disabled && activePointerId != null) {
       // WIDGET HAS BEEN DISABLED DURING DRAWING.
       // CANCEL CURRENT DRAW
       activePointerId = null;
@@ -526,15 +521,13 @@ class SignatureController extends ValueNotifier<List<Point>> {
     img.fill(signatureImage, color: bColor);
 
     final double xOffset = ((width ?? defaultWidth!) - defaultWidth!).toDouble() / 2;
-    final double yOffset =
-        ((height ?? defaultHeight!) - defaultHeight!).toDouble() / 2;
+    final double yOffset = ((height ?? defaultHeight!) - defaultHeight!).toDouble() / 2;
 
     // read the drawing points list and draw the image
     // it uses the same logic as the CustomPainter Paint function
     for (int i = 0; i < translatedPoints.length - 1; i++) {
       if (translatedPoints[i + 1].type == PointType.move) {
-        img.drawLine(
-            signatureImage,
+        img.drawLine(signatureImage,
             x1: (translatedPoints[i].offset.dx + xOffset).toInt(),
             y1: (translatedPoints[i].offset.dy + yOffset).toInt(),
             x2: (translatedPoints[i + 1].offset.dx + xOffset).toInt(),
@@ -563,10 +556,11 @@ class SignatureController extends ValueNotifier<List<Point>> {
       return null;
     }
 
-    String colorToHex(Color c) => '#${c.value.toRadixString(16).padLeft(8, '0')}';
+    String colorToHex(Color c) => '#${c.red.toRadixString(16).padLeft(2, '0')}'
+        '${c.green.toRadixString(16).padLeft(2, '0')}'
+        '${c.blue.toRadixString(16).padLeft(2, '0')}';
 
-    String formatPoint(Point p) =>
-        '${p.offset.dx.toStringAsFixed(2)},${p.offset.dy.toStringAsFixed(2)}';
+    String formatPoint(Point p) => '${p.offset.dx.toStringAsFixed(2)},${p.offset.dy.toStringAsFixed(2)}';
 
     final String polylines = <String>[
       for (final List<Point> stroke in _latestActions)
